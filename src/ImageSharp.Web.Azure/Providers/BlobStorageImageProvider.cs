@@ -67,7 +67,10 @@ namespace Pandorax.ImageSharp.Web.Azure.Providers
         public IDictionary<string, string> Settings { get; set; } = new Dictionary<string, string>();
 
         /// <inheritdoc/>
-        public bool IsValidRequest(HttpContext context) => _formatUtilities.GetExtensionFromUri(context.Request.GetDisplayUrl()) != null;
+        public bool IsValidRequest(HttpContext context)
+        {
+            return _formatUtilities.GetExtensionFromUri(context.Request.GetDisplayUrl()) != null;
+        }
 
         /// <inheritdoc/>
         public async Task<IImageResolver> GetAsync(HttpContext context)
