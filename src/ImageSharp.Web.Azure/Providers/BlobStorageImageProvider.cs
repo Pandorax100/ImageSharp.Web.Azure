@@ -20,19 +20,9 @@ namespace Pandorax.ImageSharp.Web.Azure.Providers
     public class BlobStorageImageProvider : IImageProvider
     {
         /// <summary>
-        /// The cloud storage account.
-        /// </summary>
-        private readonly CloudStorageAccount _storageAccount;
-
-        /// <summary>
         /// The container in the blob service.
         /// </summary>
         private readonly CloudBlobContainer _container;
-
-        /// <summary>
-        /// The middleware configuration options.
-        /// </summary>
-        private readonly ImageSharpMiddlewareOptions _options;
 
         /// <summary>
         /// The blob storage options.
@@ -61,12 +51,12 @@ namespace Pandorax.ImageSharp.Web.Azure.Providers
                 throw new ArgumentNullException(nameof(storageOptions));
             }
 
-            _options = options.Value;
             _storageOptions = storageOptions.Value;
-            _formatUtilities = new FormatUtilities(_options.Configuration);
-            _storageAccount = CloudStorageAccount.Parse(_storageOptions.ConnectionString);
+            _formatUtilities = new FormatUtilities(options.Value.Configuration);
 
-            CloudBlobClient client = _storageAccount.CreateCloudBlobClient();
+            CloudBlobClient client = CloudStorageAccount.Parse(_storageOptions.ConnectionString)
+                .CreateCloudBlobClient();
+
             _container = client.GetContainerReference(_storageOptions.ContainerName);
         }
 
