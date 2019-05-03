@@ -6,6 +6,12 @@
     <AssemblyName>Pandorax.ImageSharp.Web.Azure</AssemblyName>
     <RootNamespace>Pandorax.ImageSharp.Web.Azure</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Version>1.0.0-alpha1</Version>
+    <Company />
+    <Product />
+    <Description>A library extending ImageSharp.Web to use azure blob storage</Description>
+    <Authors>Pandorax</Authors>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>

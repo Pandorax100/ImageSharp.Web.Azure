@@ -24,7 +24,7 @@
         /// The leading slash is removed from any value entered.
         /// </remarks>
         /// <example>
-        /// "blobs/"
+        /// "blobs/".
         /// </example>
         public string UrlPrefix
         {

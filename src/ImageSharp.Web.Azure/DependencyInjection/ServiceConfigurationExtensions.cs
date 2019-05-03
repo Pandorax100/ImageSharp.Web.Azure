@@ -13,7 +13,7 @@ namespace Pandorax.ImageSharp.Web.Azure.DependencyInjection
         /// <summary>
         /// Registers an action used to configure <see cref="BlobStorageImageProviderOptions"/>.
         /// </summary>
-        /// <param name="services">The <see cref="IServiceCollection"/> to add the service too.</param>
+        /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
         /// <param name="configureOptions">The action used to configure the options.</param>
         /// <returns>
         /// The <see cref="IServiceCollection"/> so that additional calls can be chained.
@@ -28,7 +28,7 @@ namespace Pandorax.ImageSharp.Web.Azure.DependencyInjection
         /// <summary>
         /// Registeres a configuration instance which <see cref="BlobStorageImageProviderOptions"/> will bind to.
         /// </summary>
-        /// <param name="services">The <see cref="IServiceCollection"/> to add the service too</param>
+        /// <param name="services">The <see cref="IServiceCollection"/> to add the service to.</param>
         /// <param name="configuration">The configuration being bound.</param>
         /// <returns>
         /// The <see cref="IServiceCollection"/> so that additional calls can be chained.
