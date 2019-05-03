@@ -1,1 +1,1 @@
-# ImageSharp.Web.Azure
+# Pandorax.ImageSharp.Web.Azure
