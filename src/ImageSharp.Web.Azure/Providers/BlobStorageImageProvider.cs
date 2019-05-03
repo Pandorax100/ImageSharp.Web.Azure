@@ -34,6 +34,8 @@ namespace Pandorax.ImageSharp.Web.Azure.Providers
         /// </summary>
         private readonly FormatUtilities _formatUtilities;
 
+        private Func<HttpContext, bool> _match;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BlobStorageImageProvider"/> class.
         /// </summary>
@@ -61,7 +63,11 @@ namespace Pandorax.ImageSharp.Web.Azure.Providers
         }
 
         /// <inheritdoc/>
-        public Func<HttpContext, bool> Match { get; set; } = _ => true;
+        public Func<HttpContext, bool> Match
+        {
+            get => _match ?? IsMatch;
+            set => _match = value;
+        }
 
         /// <inheritdoc/>
         public IDictionary<string, string> Settings { get; set; } = new Dictionary<string, string>();
@@ -75,7 +81,7 @@ namespace Pandorax.ImageSharp.Web.Azure.Providers
         /// <inheritdoc/>
         public async Task<IImageResolver> GetAsync(HttpContext context)
         {
-            string blobName = context.Request.Path.Value.TrimStart('\\', '/');
+            string blobName = GetBlobName(context);
 
             if (string.IsNullOrWhiteSpace(blobName))
             {
@@ -89,6 +95,37 @@ namespace Pandorax.ImageSharp.Web.Azure.Providers
             }
 
             return new BlobStorageImageResolver(blob);
+        }
+
+        private string GetBlobName(HttpContext context)
+        {
+            var path = context.Request.Path.Value.TrimStart('\\', '/');
+
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return null;
+            }
+
+            if (_storageOptions.UrlPrefix == null)
+            {
+                return path;
+            }
+
+            // We have already matched with the prefix so we know
+            // that the path starts with the prefix
+            return path.Substring(_storageOptions.UrlPrefix.Length);
+        }
+
+        private bool IsMatch(HttpContext context)
+        {
+            if (_storageOptions.UrlPrefix == null)
+            {
+                return true;
+            }
+
+            var path = context.Request.Path.Value.TrimStart('\\', '/');
+
+            return path.StartsWith(_storageOptions.UrlPrefix);
         }
     }
 }
