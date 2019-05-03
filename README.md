@@ -4,15 +4,17 @@ A library extending [ImageSharp.Web](https://github.com/SixLabors/ImageSharp.Web
 
 ## Installation
 
-Install the [NuGet package](https://) to your ASP.NET Core Project
+Install the [NuGet package](https://www.nuget.org/packages/Pandorax.ImageSharp.Web.Azure) to your ASP.NET Core Project
 
 ```
-Install-Package Pandorax.ImageSharp.Web.Azure -Version 1.0.0-beta1
+Install-Package Pandorax.ImageSharp.Web.Azure -Version 1.0.0-alpha2
 ```
 
 ## Usage
 
-### Register the provider via dependency injection
+### Image Provider
+
+Register the provider via dependency injection
 
 ```
 services.AddImageSharpCore()
@@ -46,3 +48,32 @@ Or via configuration binding
 services.ConfigureBlobProviderOptions(configuration.GetSection("BlobProviderOptions"));
 ```
 
+## Using the Cache
+
+First register the cache via dependency injection
+
+Using the ImageSharpCoreBuilder:
+```
+builder.SetCache<BlobCache>()
+```
+
+Using the service collection:
+```
+services.AddSingleton<IImageCache, BlobCache>()
+```
+
+### Configure the Cache
+
+Via an action
+```
+services.ConfigureBlobCacheOptions(options =>
+{
+    options.ConnectionString = configuration["ConnectionString"];
+    options.ContainerName = configuration["ContainerName"];
+});
+```
+
+Or via configuration binding
+```
+services.ConfigureBlobCacheOptions(configuration.GetSection("BlobCacheOptions"));
+```
