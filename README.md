@@ -2,6 +2,9 @@
 
 A library extending [ImageSharp.Web](https://github.com/SixLabors/ImageSharp.Web) to use azure blob storage.
 
+## Note
+There is already an [open pull request](https://github.com/SixLabors/ImageSharp.Web/pull/49) to add similar functionality to the [main repo](https://github.com/SixLabors/ImageSharp.Web). As functionality is added to ImageSharp.Web, it will be removed from here until this repo becomes obsolete and is deleted.
+
 ## Installation
 
 Install the [NuGet package](https://www.nuget.org/packages/Pandorax.ImageSharp.Web.Azure) to your ASP.NET Core Project
