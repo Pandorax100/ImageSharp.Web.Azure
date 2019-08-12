@@ -38,6 +38,11 @@ namespace Pandorax.ImageSharp.Web.Azure.Resolvers
         }
 
         /// <inheritdoc/>
-        public Task<Stream> OpenReadAsync() => _blob.OpenReadAsync();
+        public async Task<Stream> OpenReadAsync()
+        {
+            var memStream = new MemoryStream();
+            await _blob.DownloadToStreamAsync(memStream);
+            return memStream;
+        }
     }
 }
