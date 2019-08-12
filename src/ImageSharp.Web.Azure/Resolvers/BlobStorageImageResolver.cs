@@ -42,6 +42,9 @@ namespace Pandorax.ImageSharp.Web.Azure.Resolvers
         {
             var memStream = new MemoryStream();
             await _blob.DownloadToStreamAsync(memStream);
+
+            memStream.Position = 0;
+
             return memStream;
         }
     }
