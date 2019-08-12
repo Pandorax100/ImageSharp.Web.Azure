@@ -10,7 +10,6 @@
     <Product />
     <Description>A library extending ImageSharp.Web to use azure blob storage</Description>
     <Authors>Pandorax</Authors>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/Pandorax100/ImageSharp.Web.Azure</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
