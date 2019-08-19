@@ -10,7 +10,7 @@ There is already an [open pull request](https://github.com/SixLabors/ImageSharp.
 Install the [NuGet package](https://www.nuget.org/packages/Pandorax.ImageSharp.Web.Azure) to your ASP.NET Core Project
 
 ```
-Install-Package Pandorax.ImageSharp.Web.Azure -Version 1.0.0-alpha2
+Install-Package Pandorax.ImageSharp.Web.Azure -Version 1.0.0-alpha4
 ```
 
 ## Usage
