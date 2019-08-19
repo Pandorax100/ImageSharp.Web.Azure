@@ -38,6 +38,10 @@ The providers are matched in the order they are registered, so it is important t
 
 Via an action
 ```
+using Pandorax.ImageSharp.Web.Azure.DependencyInjection;
+
+...
+
 services.ConfigureBlobProviderOptions(options =>
 {
     options.ConnectionString = configuration["ConnectionString"];
