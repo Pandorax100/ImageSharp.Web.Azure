@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.Azure.Storage;
-using Microsoft.Azure.Storage.Blob;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using Microsoft.Extensions.Options;
 using Pandorax.ImageSharp.Web.Azure.Resolvers;
 using SixLabors.ImageSharp.Web;
@@ -17,7 +17,7 @@ namespace Pandorax.ImageSharp.Web.Azure.Caching
     public class BlobCache : IImageCache
     {
         private readonly BlobCacheOptions _options;
-        private readonly CloudBlobContainer _container;
+        private readonly BlobContainerClient _container;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BlobCache"/> class.
@@ -32,9 +32,9 @@ namespace Pandorax.ImageSharp.Web.Azure.Caching
 
             _options = options.Value;
 
-            _container = CloudStorageAccount.Parse(_options.ConnectionString)
-                .CreateCloudBlobClient()
-                .GetContainerReference(_options.ContainerName);
+            _container = new BlobContainerClient(
+                _options.ConnectionString,
+                _options.ContainerName);
         }
 
         /// <inheritdoc/>
@@ -43,7 +43,7 @@ namespace Pandorax.ImageSharp.Web.Azure.Caching
         /// <inheritdoc/>
         public async Task<IImageResolver> GetAsync(string key)
         {
-            var blob = _container.GetBlobReference(key);
+            var blob = _container.GetBlobClient(key);
 
             if (!await blob.ExistsAsync().ConfigureAwait(false))
             {
@@ -56,17 +56,15 @@ namespace Pandorax.ImageSharp.Web.Azure.Caching
         /// <inheritdoc/>
         public async Task SetAsync(string key, Stream stream, ImageMetaData metadata)
         {
-            var blob = _container.GetBlockBlobReference(key);
+            var blob = _container.GetBlobClient(key);
 
-            await blob.UploadFromStreamAsync(stream).ConfigureAwait(false);
+            await blob.UploadAsync(stream).ConfigureAwait(false);
 
-            await blob.SetStandardBlobTierAsync(StandardBlobTier.Hot).ConfigureAwait(false);
-
-            blob.Properties.ContentType = metadata.ContentType;
-
-            blob.Properties.CacheControl = $"max-age={(int)metadata.CacheControlMaxAge.TotalSeconds}";
-
-            await blob.SetPropertiesAsync().ConfigureAwait(false);
+            await blob.SetHttpHeadersAsync(new BlobHttpHeaders
+            {
+                ContentType = metadata.ContentType,
+                CacheControl = $"max-age={(int)metadata.CacheControlMaxAge.TotalSeconds}",
+            }).ConfigureAwait(false);
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Azure.Storage.Blob;
+using Azure;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using SixLabors.ImageSharp.Web;
 using SixLabors.ImageSharp.Web.Resolvers;
 
@@ -17,35 +17,29 @@ namespace Pandorax.ImageSharp.Web.Azure.Resolvers
         /// <summary>
         /// The Azure blob.
         /// </summary>
-        private readonly CloudBlob _blob;
+        private readonly BlobClient _blob;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BlobStorageImageResolver"/> class.
         /// </summary>
         /// <param name="blob">The Azure blob.</param>
-        public BlobStorageImageResolver(CloudBlob blob) => _blob = blob;
+        public BlobStorageImageResolver(BlobClient blob) => _blob = blob;
 
         /// <inheritdoc/>
         public async Task<ImageMetaData> GetMetaDataAsync()
         {
-            await _blob.FetchAttributesAsync().ConfigureAwait(false);
-
-            BlobProperties properties = _blob.Properties;
+            Response<BlobProperties> properties = await _blob.GetPropertiesAsync().ConfigureAwait(false);
 
             return new ImageMetaData(
-                properties?.LastModified?.UtcDateTime ?? DateTime.UtcNow,
-                properties.ContentType);
+                properties.Value?.LastModified.UtcDateTime ?? DateTime.UtcNow,
+                properties.Value.ContentType);
         }
 
         /// <inheritdoc/>
         public async Task<Stream> OpenReadAsync()
         {
-            var memStream = new MemoryStream();
-            await _blob.DownloadToStreamAsync(memStream);
-
-            memStream.Position = 0;
-
-            return memStream;
+            Response<BlobDownloadInfo> blob = await _blob.DownloadAsync().ConfigureAwait(false);
+            return blob.Value.Content;
         }
     }
 }

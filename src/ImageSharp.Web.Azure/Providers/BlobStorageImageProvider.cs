@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.Azure.Storage;
-using Microsoft.Azure.Storage.Blob;
 using Microsoft.Extensions.Options;
 using Pandorax.ImageSharp.Web.Azure.Resolvers;
 using SixLabors.ImageSharp.Web.Helpers;
@@ -22,7 +21,7 @@ namespace Pandorax.ImageSharp.Web.Azure.Providers
         /// <summary>
         /// The container in the blob service.
         /// </summary>
-        private readonly CloudBlobContainer _container;
+        private readonly BlobContainerClient _container;
 
         /// <summary>
         /// The blob storage options.
@@ -56,10 +55,9 @@ namespace Pandorax.ImageSharp.Web.Azure.Providers
             _storageOptions = storageOptions.Value;
             _formatUtilities = new FormatUtilities(options.Value.Configuration);
 
-            CloudBlobClient client = CloudStorageAccount.Parse(_storageOptions.ConnectionString)
-                .CreateCloudBlobClient();
-
-            _container = client.GetContainerReference(_storageOptions.ContainerName);
+            _container = new BlobContainerClient(
+                _storageOptions.ConnectionString,
+                _storageOptions.ContainerName);
         }
 
         /// <inheritdoc/>
@@ -88,7 +86,7 @@ namespace Pandorax.ImageSharp.Web.Azure.Providers
                 return null;
             }
 
-            CloudBlockBlob blob = _container.GetBlockBlobReference(blobName);
+            BlobClient blob = _container.GetBlobClient(blobName);
             if (!await blob.ExistsAsync().ConfigureAwait(false))
             {
                 return null;
