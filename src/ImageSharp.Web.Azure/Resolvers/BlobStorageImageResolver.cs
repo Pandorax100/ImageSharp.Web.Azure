@@ -38,8 +38,14 @@ namespace Pandorax.ImageSharp.Web.Azure.Resolvers
         /// <inheritdoc/>
         public async Task<Stream> OpenReadAsync()
         {
-            Response<BlobDownloadInfo> blob = await _blob.DownloadAsync().ConfigureAwait(false);
-            return blob.Value.Content;
+            // There are errors that occur consuming the blob stream
+            // directly. This is a memory intensive hack to prevent that.
+            var outStream = new MemoryStream();
+            await _blob.DownloadToAsync(outStream);
+
+            outStream.Position = 0;
+
+            return outStream;
         }
     }
 }
