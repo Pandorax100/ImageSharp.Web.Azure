@@ -12,7 +12,7 @@
     <Authors>Liam McDermott</Authors>
     <PackageProjectUrl>https://github.com/Pandorax100/ImageSharp.Web.Azure</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>1.0.0-beta001</Version>
+    <Version>1.0.0-beta002</Version>
     <RepositoryUrl>https://github.com/Pandorax100/ImageSharp.Web.Azure</RepositoryUrl>
   </PropertyGroup>
 
