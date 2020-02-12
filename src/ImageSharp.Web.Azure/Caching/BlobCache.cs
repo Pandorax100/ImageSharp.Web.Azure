@@ -58,7 +58,7 @@ namespace Pandorax.ImageSharp.Web.Azure.Caching
         {
             var blob = _container.GetBlobClient(key);
 
-            await blob.UploadAsync(stream).ConfigureAwait(false);
+            await blob.UploadAsync(stream, overwrite: true).ConfigureAwait(false);
 
             await blob.SetHttpHeadersAsync(new BlobHttpHeaders
             {
